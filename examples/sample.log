@@ -1,0 +1,23 @@
+2024-01-15 14:30:22 INFO: Server started on port 8080
+2024-01-15 14:30:23 DEBUG: Loading configuration from /etc/app/config.yaml
+2024-01-15 14:30:24 WARN: Missing optional config file /etc/app/features.yaml
+2024-01-15 14:30:25 INFO: Database connection established to postgres://localhost:5432/appdb
+2024-01-15 14:30:26 INFO: Redis connection established to redis://localhost:6379
+2024-01-15 14:30:27 INFO: HTTP server listening on 0.0.0.0:8080
+2024-01-15 14:30:30 INFO: User login attempt from 192.168.1.100 user_id=12345
+2024-01-15 14:30:31 INFO: Authentication successful for user_id=12345
+2024-01-15 14:30:32 DEBUG: Session created session_id=abc-123-def-456
+2024-01-15 14:30:35 INFO: API request GET /api/users/12345 response_time=45ms status=200
+2024-01-15 14:30:40 WARN: Slow query detected: SELECT * FROM users WHERE active = true response_time=1200ms
+2024-01-15 14:30:45 ERROR: Database connection lost - attempting reconnect
+2024-01-15 14:30:46 INFO: Database connection restored after 1 retry
+2024-01-15 14:30:50 INFO: API request POST /api/orders response_time=230ms status=201
+2024-01-15 14:30:55 ERROR: Payment processing failed for order_id=ORD-789 error="Credit card declined"
+2024-01-15 14:31:00 INFO: User logout user_id=12345 session_duration=30s
+{"timestamp": "2024-01-15T14:31:05Z", "level": "INFO", "message": "Structured log entry", "service": "payment-service", "request_id": "req_abc123def456"}
+{"timestamp": "2024-01-15T14:31:10Z", "level": "ERROR", "message": "HTTP client timeout", "url": "https://api.payment-provider.com/charge", "timeout_ms": 5000}
+2024-01-15 14:31:15 DEBUG: Cache hit for key user:12345:profile cache_time=2ms
+2024-01-15 14:31:20 INFO: Background job started job_id=cleanup-temp-files job_type=maintenance
+2024-01-15 14:31:25 ERROR: File system error - disk space low available=50MB threshold=100MB
+2024-01-15 14:31:30 FATAL: Critical system error - shutting down gracefully
+2024-01-15 14:31:31 INFO: Shutdown complete - all connections closed

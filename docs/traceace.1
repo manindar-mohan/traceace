@@ -1,0 +1,269 @@
+.TH TRACEACE 1 "January 2024" "traceace 1.0.0" "User Commands"
+.SH NAME
+traceace \- TraceAce - Blazing fast terminal log analyzer
+.SH SYNOPSIS
+.B traceace
+[\fIOPTIONS\fR] \fIFILE\fR...
+.br
+.B traceace
+\fBconfig\fR \fBshow\fR|\fBedit\fR
+.br
+.B traceace
+\fBvalidate\fR [\fIFILE\fR...]
+.br
+.B traceace
+\fBversion\fR
+.SH DESCRIPTION
+\fBtraceace\fR is a blazing fast terminal user interface for analyzing and monitoring log files in real-time. It provides interactive search and filtering capabilities, syntax highlighting, and supports both structured (JSON/YAML) and unstructured logs.
+
+The tool features a two-pane view showing all logs and filtered results simultaneously, real-time file tailing with automatic rotation detection, and keyboard-first navigation with Vim-like keybindings.
+.SH OPTIONS
+.TP
+\fB\-\-config\fR \fIstring\fR
+Config file (default: $XDG_CONFIG_HOME/traceace/config.yaml)
+.TP
+\fB\-\-theme\fR \fIstring\fR
+Color theme: dark, light, or monochrome (default: dark)
+.TP
+\fB\-f\fR, \fB\-\-tail\fR
+Tail files (follow mode). Enabled by default. Use --tail=false to disable.
+.TP
+\fB\-F\fR, \fB\-\-from\-beginning\fR
+Read entire file from beginning instead of tailing from end
+.TP
+\fB\-C\fR, \fB\-\-context\fR \fIint\fR
+Number of context lines to show around matches
+.TP
+\fB\-\-query\fR \fIstring\fR
+Start with a saved query from configuration
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Enable verbose output during startup
+.TP
+\fB\-\-debug\fR
+Enable debug mode with performance metrics
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Show help message and exit
+.SH SUBCOMMANDS
+.TP
+.B config show
+Display current configuration settings
+.TP
+.B config edit
+Open configuration file in default editor
+.TP
+.B validate [FILES...]
+Validate configuration and optionally check file accessibility
+.TP
+.B benchmark FILE
+Run performance benchmarks on specified log file
+.TP
+.B version
+Display version information
+.SH KEY BINDINGS
+.SS Navigation
+.TP
+.B j, ↓
+Scroll down one line
+.TP
+.B k, ↑
+Scroll up one line
+.TP
+.B Ctrl+d
+Page down
+.TP
+.B Ctrl+u
+Page up
+.TP
+.B g
+Go to top of current pane
+.TP
+.B G
+Go to bottom of current pane
+.SS Search and Filtering
+.TP
+.B /
+Open search bar
+.TP
+.B Enter
+Apply current search (when search bar is active)
+.TP
+.B Esc
+Close search bar or help overlay
+.TP
+.B n
+Jump to next search match
+.TP
+.B N
+Jump to previous search match
+.TP
+.B c
+Clear current filter
+.SS Controls
+.TP
+.B Space
+Pause or resume log streaming
+.TP
+.B t
+Toggle between all logs pane and filtered logs pane
+.TP
+.B b
+Add bookmark at current cursor position
+.TP
+.B e
+Export filtered logs (future feature)
+.TP
+.B ?
+Toggle help overlay
+.TP
+.B q, Ctrl+c
+Quit the application
+.SH SEARCH SYNTAX
+\fBtraceace\fR supports several types of search queries:
+.SS Simple Text Search
+.TP
+.B error
+Find lines containing the word "error" (case-insensitive)
+.TP
+.B "connection failed"
+Find lines containing the exact phrase "connection failed"
+.SS Field-Based Queries
+.TP
+.B level:ERROR
+Show only lines with ERROR log level
+.TP
+.B source:/var/log/app.log
+Filter by source file path
+.TP
+.B user.id:123
+Search in parsed JSON fields using dot notation
+.TP
+.B timestamp:>2024-01-15
+Time-based filtering (for lines with parsed timestamps)
+.SS Regular Expressions
+.TP
+.B level:(ERROR|FATAL)
+Multiple log levels using regex alternation
+.TP
+.B \\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}
+Match IP addresses using regex pattern
+.TP
+.B HTTP/[12]\\.[01]
+Match HTTP version patterns
+.SS Advanced Queries
+.TP
+.B level:ERROR AND source:app.log
+Boolean logic (note: AND/OR operators planned for future release)
+.TP
+.B response_time:>1000
+Numeric comparison operators
+.TP
+.B user.email:*@company.com
+Wildcard matching patterns
+.SH CONFIGURATION
+Configuration is stored in YAML format at \fI$XDG_CONFIG_HOME/traceace/config.yaml\fR (typically \fI~/.config/traceace/config.yaml\fR).
+.SS Configuration Sections
+.TP
+.B ui
+User interface settings including theme, buffer size, refresh rate
+.TP
+.B highlight_rules
+Custom syntax highlighting patterns and colors
+.TP
+.B saved_queries
+Predefined search queries for quick access
+.TP
+.B keybindings
+Custom key binding mappings
+.TP
+.B general
+General application settings including telemetry and performance options
+.SH FILES
+.TP
+.I ~/.config/traceace/config.yaml
+Default configuration file location
+.TP
+.I ~/.config/traceace/
+Configuration directory containing user settings
+.SH EXAMPLES
+.TP
+.B traceace /var/log/syslog
+Tail the system log with default settings
+.TP
+.B traceace --theme=light /var/log/app.log /var/log/error.log
+Monitor multiple files with light theme
+.TP
+.B traceace -F --debug /tmp/debug.log
+Read entire debug log from beginning with debug output
+.TP
+.B traceace --query=errors /var/log/application.log
+Start with a predefined saved query named "errors"
+.TP
+.B traceace config show
+Display current configuration
+.TP
+.B traceace validate /var/log/*.log
+Validate configuration and check log file accessibility
+.SH ENVIRONMENT
+.TP
+.B XDG_CONFIG_HOME
+If set, configuration files are stored in $XDG_CONFIG_HOME/traceace/
+.TP
+.B EDITOR
+Default editor for 'traceace config edit' command
+.TP
+.B TERM
+Terminal type, affects color and display capabilities
+.SH EXIT STATUS
+\fBtraceace\fR exits with status 0 on success, and >0 if an error occurs.
+.TP
+.B 0
+Successful completion
+.TP
+.B 1
+General error (file not found, permission denied, etc.)
+.TP
+.B 2
+Configuration error
+.SH PERFORMANCE
+For optimal performance when monitoring large or high-volume log files:
+.IP \(bu 2
+Adjust \fBmax_buffer_lines\fR in configuration to control memory usage
+.IP \(bu 2
+Use field-based queries instead of complex regular expressions when possible
+.IP \(bu 2
+Increase \fBrefresh_rate_ms\fR if experiencing performance issues
+.IP \(bu 2
+Consider using \fB--from-beginning=false\fR for very large files
+.SH DIAGNOSTICS
+Common error messages and solutions:
+.TP
+.B "Failed to load config"
+Configuration file has syntax errors. Use \fBtraceace validate\fR to check.
+.TP
+.B "Permission denied"
+Insufficient permissions to read log file. Run with appropriate user privileges.
+.TP
+.B "File not found"
+Specified log file does not exist or path is incorrect.
+.TP
+.B "Invalid regex pattern"
+Search query contains invalid regular expression syntax.
+.SH BUGS
+Report bugs to: https://github.com/loganalyzer/traceace/issues
+.br
+Include terminal type, operating system, and steps to reproduce.
+.SH AUTHOR
+TraceAce development team.
+.SH COPYRIGHT
+Copyright (c) 2024 TraceAce contributors.
+.br
+This is free software; see the source for copying conditions.
+.SH SEE ALSO
+.BR tail (1),
+.BR grep (1),
+.BR less (1),
+.BR journalctl (1)
+
+The full documentation is available at: https://github.com/loganalyzer/traceace

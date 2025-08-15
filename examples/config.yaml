@@ -1,0 +1,138 @@
+# TraceAce - Example Configuration  
+# Place this file at: $XDG_CONFIG_HOME/traceace/config.yaml (usually ~/.config/traceace/config.yaml)
+
+# User Interface Settings
+ui:
+  theme: dark                    # Color theme: dark, light, monochrome
+  context_lines: 3               # Number of context lines around matches
+  max_buffer_lines: 10000        # Maximum lines to keep in memory
+  refresh_rate_ms: 100           # UI refresh rate in milliseconds
+  show_line_numbers: true        # Show line numbers in display
+
+# Syntax Highlighting Rules
+highlight_rules:
+  - name: timestamp
+    pattern: '\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}'
+    color: cyan
+    style: normal
+    
+  - name: loglevel
+    pattern: '\b(ERROR|WARN|INFO|DEBUG|TRACE|FATAL)\b'
+    color: auto                  # Auto-color based on level
+    style: bold
+    
+  - name: ip_address
+    pattern: '\b(?:\d{1,3}\.){3}\d{1,3}\b'
+    color: yellow
+    style: normal
+    
+  - name: status_code
+    pattern: '\b[1-5]\d{2}\b'
+    color: auto                  # Auto-color based on status range
+    style: normal
+    
+  - name: uuid
+    pattern: '\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b'
+    color: magenta
+    style: normal
+    
+  - name: url
+    pattern: 'https?://[^\s]+'
+    color: blue
+    style: underline
+    
+  # Custom rules for your specific logs
+  - name: request_id
+    pattern: 'req_id=[\w-]+'
+    color: green
+    style: normal
+    
+  - name: user_id
+    pattern: 'user_id=\d+'
+    color: cyan
+    style: normal
+
+# Saved Search Queries
+saved_queries:
+  - name: errors
+    query: "level:ERROR"
+    description: "Show all error level logs"
+    is_regex: false
+    
+  - name: warnings_and_errors
+    query: "level:(ERROR|WARN)"
+    description: "Show warnings and errors"
+    is_regex: true
+    
+  - name: database_errors
+    query: "database.*error"
+    description: "Database-related errors"
+    is_regex: true
+    
+  - name: slow_requests
+    query: "response_time:>1000"
+    description: "Requests slower than 1 second"
+    is_regex: false
+    
+  - name: user_actions
+    query: "user_id:* AND (login|logout|purchase)"
+    description: "User login/logout and purchase actions"
+    is_regex: true
+    
+  - name: api_errors
+    query: "path:/api/ AND level:ERROR"
+    description: "API endpoint errors"
+    is_regex: false
+
+# Key Bindings (Vim-like by default)
+keybindings:
+  search: "/"                    # Open search bar
+  escape: "esc"                  # Close search/help
+  next_match: "n"                # Next search match
+  prev_match: "N"                # Previous search match
+  pause_resume: "space"          # Pause/resume stream
+  bookmark: "b"                  # Add bookmark
+  export: "e"                    # Export filtered logs
+  toggle_view: "t"               # Toggle active pane
+  help: "?"                      # Show help
+  quit: "q"                      # Quit application
+  scroll_up: "k"                 # Scroll up
+  scroll_down: "j"               # Scroll down
+  page_up: "ctrl+u"              # Page up
+  page_down: "ctrl+d"            # Page down
+  goto_top: "g"                  # Go to top
+  goto_bottom: "G"               # Go to bottom
+  next_tab: "tab"                # Next file tab
+  prev_tab: "shift+tab"          # Previous file tab
+
+# General Application Settings
+general:
+  log_level: info                # Internal log level: debug, info, warn, error
+  enable_telemetry: false        # Anonymous usage statistics (disabled by default)
+  max_index_size: 104857600      # Maximum index size in bytes (100MB)
+  file_rotation_check_ms: 1000   # File rotation check interval in milliseconds
+
+# Advanced Configuration Examples
+
+# Custom theme colors (uncomment to use)
+# custom_colors:
+#   background: "#1e1e1e"
+#   foreground: "#d4d4d4"
+#   error: "#ff4444"
+#   warning: "#ffaa44"
+#   info: "#44ff44"
+#   debug: "#44aaff"
+
+# Field aliases for structured logs
+# field_aliases:
+#   "@timestamp": "timestamp"
+#   "log.level": "level"
+#   "service.name": "source"
+#   "message": "msg"
+
+# Export settings
+# export:
+#   default_format: json
+#   include_metadata: true
+#   compress: true
+#   max_lines: 100000
